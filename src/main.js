@@ -6,9 +6,6 @@ import {
   PART_KEYS,
   PART_LABELS,
   loadOutfitSelection,
-  headForStrength,
-  legsForStrength,
-  bodyForStrength,
 } from "./character.js";
 import {
   TASKS,
@@ -36,6 +33,14 @@ const { hero } = createScene(canvas);
 let state = loadState();
 let toastTimer;
 let lastRank = "";
+
+/** Opciones por pieza (orden de progresión). */
+const PART_OPTIONS = {
+  head: ["none", "casual", "suit", "adventurer"],
+  body: ["none", "suit", "casual", "adventurer"],
+  legs: ["none", "casual", "punk", "suit", "adventurer"],
+  feet: ["none", "casual", "punk", "suit", "adventurer"],
+};
 
 const checkSvg = `
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -85,20 +90,15 @@ function syncUI() {
   }
 
   hero.setMuscle(ratio);
+  syncOutfitSelects();
+}
 
-  // Piezas que progresan con la fuerza
-  const autoParts = {
-    head: headForStrength(ratio),
-    body: bodyForStrength(ratio),
-    legs: legsForStrength(ratio),
-  };
-  for (const [part, outfitId] of Object.entries(autoParts)) {
-    if (hero.selection?.[part] !== outfitId) {
-      hero.setPart(part, outfitId);
-    }
+function syncOutfitSelects() {
+  const selection = hero.selection || loadOutfitSelection();
+  for (const part of PART_KEYS) {
     const select = document.querySelector(`#outfit-${part}`);
-    if (select && select.value !== outfitId) {
-      select.value = outfitId;
+    if (select && selection[part] && select.value !== selection[part]) {
+      select.value = selection[part];
     }
   }
 }
@@ -135,12 +135,6 @@ function renderTasks() {
 
 function renderOutfitControls() {
   const selection = loadOutfitSelection();
-  const lockedParts = {
-    head: ["casual", "suit", "adventurer"],
-    body: ["suit", "casual", "adventurer"],
-    legs: ["casual", "punk", "suit", "adventurer"],
-  };
-
   outfitControls.innerHTML = "";
 
   for (const part of PART_KEYS) {
@@ -149,22 +143,16 @@ function renderOutfitControls() {
 
     const label = document.createElement("label");
     label.htmlFor = `outfit-${part}`;
-    label.textContent = lockedParts[part]
-      ? `${PART_LABELS[part]} (por fuerza)`
-      : PART_LABELS[part];
+    label.textContent = PART_LABELS[part];
 
     const select = document.createElement("select");
     select.id = `outfit-${part}`;
     select.dataset.part = part;
-    if (lockedParts[part]) {
-      select.disabled = true;
-      select.title = "Cambia sola con tu nivel de fuerza";
-    }
 
-    for (const outfit of Object.values(OUTFITS)) {
-      if (lockedParts[part] && !lockedParts[part].includes(outfit.id)) {
-        continue;
-      }
+    const options = PART_OPTIONS[part] || Object.keys(OUTFITS);
+    for (const outfitId of options) {
+      const outfit = OUTFITS[outfitId];
+      if (!outfit) continue;
       const option = document.createElement("option");
       option.value = outfit.id;
       option.textContent = outfit.label;
@@ -172,13 +160,11 @@ function renderOutfitControls() {
       select.appendChild(option);
     }
 
-    if (!lockedParts[part]) {
-      select.addEventListener("change", () => {
-        hero.setPart(part, select.value);
-        const name = OUTFITS[select.value]?.label ?? select.value;
-        showToast(`${PART_LABELS[part]}: ${name}`);
-      });
-    }
+    select.addEventListener("change", () => {
+      hero.setPart(part, select.value);
+      const name = OUTFITS[select.value]?.label ?? select.value;
+      showToast(`${PART_LABELS[part]}: ${name}`);
+    });
 
     field.append(label, select);
     outfitControls.appendChild(field);

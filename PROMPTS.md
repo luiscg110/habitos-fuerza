@@ -84,6 +84,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > cuerpo traje, hoddie, aventurero
 
+---
+
+### Selectable outfit dropdowns
+**Prompt:**
+> pero los dropdowns son seleccionable
+
 ## Convención de commit
 
 ```
