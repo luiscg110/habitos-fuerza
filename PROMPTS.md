@@ -150,6 +150,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > el fondo de rico era un fondo morado que habias puesto era parecido a una disco no me acuerdo
 
+---
+
+### Warm yellow light at high levels
+**Prompt:**
+> tambien cuando ya esta en niveles altos, antes habia como una luz amarilla que hacia que no se viera oscuro
+
 ## Convención de commit
 
 ```

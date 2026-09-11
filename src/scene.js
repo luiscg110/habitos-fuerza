@@ -197,17 +197,17 @@ async function loadHabitat(renderer, scene, lights) {
       ring.material.emissiveIntensity = 0.2 + ease * 0.45 + pulse * 0.2;
       ring.material.opacity = 0.45 + ease * 0.2;
 
-      lights.hemi.intensity = 0.35 + ease * 0.2;
-      lights.key.intensity = 1.05 + ease * 0.25;
-      lights.fill.intensity = 0.35 + ease * 0.25;
-      lights.rim.intensity = 0.4 + ease * 0.9 + pulse * 0.8;
-      lights.rim.color.setRGB(
-        THREE.MathUtils.lerp(1, 0.72, ease),
-        THREE.MathUtils.lerp(0.7, 0.35, ease),
-        THREE.MathUtils.lerp(0.4, 1.0, ease),
-      );
+      lights.hemi.intensity = 0.4 + ease * 0.35;
+      lights.key.intensity = 1.2 + ease * 1.1;
+      lights.key.color.setRGB(1, THREE.MathUtils.lerp(0.94, 0.9, ease), THREE.MathUtils.lerp(0.85, 0.72, ease));
+      lights.fill.intensity = 0.4 + ease * 0.35;
+      // Rim + warm amarillos en alto: sacan al héroe de la oscuridad del lobby morado
+      lights.rim.intensity = 0.55 + ease * 1.5 + pulse * 1.1;
+      lights.rim.color.setRGB(1, THREE.MathUtils.lerp(0.72, 0.82, ease), THREE.MathUtils.lerp(0.4, 0.48, ease));
+      lights.warm.intensity = 0.15 + ease * 1.8 + pulse * 0.6;
+      lights.warm.color.setRGB(1, THREE.MathUtils.lerp(0.85, 0.78, ease), THREE.MathUtils.lerp(0.55, 0.42, ease));
 
-      renderer.toneMappingExposure = 0.8 + ease * 0.12;
+      renderer.toneMappingExposure = 0.85 + ease * 0.18;
       updateCss(ease);
     },
   };
@@ -259,7 +259,11 @@ export function createScene(canvas) {
   const rim = new THREE.PointLight(0xffaa55, 0.55, 10);
   rim.position.set(-1.4, 2.3, 2.3);
   scene.add(rim);
-  const lights = { hemi, key, fill, rim };
+  // Luz cálida frontal: en niveles altos ilumina al héroe (antes se veía oscuro)
+  const warm = new THREE.PointLight(0xffd27a, 0.15, 14);
+  warm.position.set(0.4, 2.1, 2.6);
+  scene.add(warm);
+  const lights = { hemi, key, fill, rim, warm };
 
   const hero = new Hero();
   hero.root.position.set(0.28, 0, 0);
