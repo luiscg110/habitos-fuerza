@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 export const POWER_RANKS = [
   { min: 0, title: "Novato", line: "Empieza hoy. El cuerpo escucha." },
@@ -465,10 +464,4 @@ export class Hero {
     this.aura.material.emissiveIntensity = 0.35 + m * 1.0 + this.pulse * 1.3;
     this.aura.rotation.z = this.time * 0.55;
   }
-}
-
-export function attachEnvironment(renderer, scene) {
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  pmrem.dispose();
 }

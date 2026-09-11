@@ -132,6 +132,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > puedes ponerle un ambiente pobre a un ambiente rico mientras que vamos subiendo de nivel
 
+---
+
+### Real HDRI environments (not box props)
+**Prompt:**
+> es una mierda, si quieres busca ambientes ya hechos o como los hacen
+
 ## Convención de commit
 
 ```
