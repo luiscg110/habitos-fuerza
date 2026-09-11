@@ -120,6 +120,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > puedes editar el color de las vestimentas ?
 
+---
+
+### Smaller hero size range
+**Prompt:**
+> comienza desde mas pequeno el presnaje porque puede ser mas pequeno pero se pone muy grande, corre el rango
+
 ## Convención de commit
 
 ```
