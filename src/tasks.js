@@ -3,50 +3,50 @@ const STORAGE_KEY = "habitos-fuerza-v1";
 export const TASKS = [
   {
     id: "teeth",
-    title: "Cepillarse los dientes",
-    detail: "Mañana y noche cuentan como una.",
+    title: "Brush your teeth",
+    detail: "Morning and night count as one.",
     gain: 12,
   },
   {
     id: "room",
-    title: "Arreglar el cuarto",
-    detail: "Cama, piso y escritorio en orden.",
+    title: "Tidy your room",
+    detail: "Bed, floor, and desk in order.",
     gain: 14,
   },
   {
     id: "shower",
-    title: "Bañarse",
-    detail: "Higiene completa del día.",
+    title: "Take a shower",
+    detail: "Full hygiene for the day.",
     gain: 12,
   },
   {
     id: "water",
-    title: "Tomar agua",
-    detail: "Al menos 6 vasos hoy.",
+    title: "Drink water",
+    detail: "At least 6 glasses today.",
     gain: 10,
   },
   {
     id: "move",
-    title: "Mover el cuerpo",
-    detail: "Caminar, estirar o ejercicio corto.",
+    title: "Move your body",
+    detail: "Walk, stretch, or a short workout.",
     gain: 16,
   },
   {
     id: "eat",
-    title: "Comer algo real",
-    detail: "Una comida con verdura o proteína.",
+    title: "Eat something real",
+    detail: "A meal with veggies or protein.",
     gain: 12,
   },
   {
     id: "sleep",
-    title: "Dormir a buena hora",
-    detail: "Apagar pantallas y descansar.",
+    title: "Sleep on time",
+    detail: "Screens off and rest well.",
     gain: 14,
   },
   {
     id: "focus",
-    title: "Una tarea importante",
-    detail: "Estudio, trabajo o un pendiente clave.",
+    title: "One important task",
+    detail: "Study, work, or a key to-do.",
     gain: 10,
   },
 ];
@@ -141,7 +141,7 @@ export function completedCount(state) {
 }
 
 export function formatToday() {
-  return new Intl.DateTimeFormat("es", {
+  return new Intl.DateTimeFormat("en", {
     weekday: "long",
     day: "numeric",
     month: "long",

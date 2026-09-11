@@ -2,12 +2,12 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 export const POWER_RANKS = [
-  { min: 0, title: "Novato", line: "Empieza hoy. El cuerpo escucha." },
-  { min: 0.2, title: "En marcha", line: "Ya se nota la disciplina." },
-  { min: 0.4, title: "Firme", line: "Más fuerte que ayer." },
-  { min: 0.6, title: "Guerrero", line: "Los hábitos te están forjando." },
-  { min: 0.8, title: "Imparable", line: "Casi en modo bestia." },
-  { min: 1, title: "Bestia", line: "Día completo. Eres de hierro." },
+  { min: 0, title: "Rookie", line: "Start today. Your body is listening." },
+  { min: 0.2, title: "Rolling", line: "Discipline is already showing." },
+  { min: 0.4, title: "Steady", line: "Stronger than yesterday." },
+  { min: 0.6, title: "Warrior", line: "Your habits are forging you." },
+  { min: 0.8, title: "Unstoppable", line: "Almost in beast mode." },
+  { min: 1, title: "Beast", line: "Full day. You are iron." },
 ];
 
 export function rankFor(ratio) {
@@ -21,13 +21,13 @@ export function rankFor(ratio) {
 export const OUTFITS = {
   none: {
     id: "none",
-    label: "Ninguno",
+    label: "None",
     file: null,
     prefix: null,
   },
   adventurer: {
     id: "adventurer",
-    label: "Aventurero",
+    label: "Adventurer",
     file: "/models/adventurer.glb",
     prefix: "Adventurer",
   },
@@ -45,7 +45,7 @@ export const OUTFITS = {
   },
   suit: {
     id: "suit",
-    label: "Traje",
+    label: "Suit",
     file: "/models/business.glb",
     prefix: "Suit",
   },
@@ -53,10 +53,10 @@ export const OUTFITS = {
 
 export const PART_KEYS = ["head", "body", "legs", "feet"];
 export const PART_LABELS = {
-  head: "Cabeza",
-  body: "Cuerpo",
-  legs: "Piernas",
-  feet: "Pies",
+  head: "Head",
+  body: "Body",
+  legs: "Legs",
+  feet: "Feet",
 };
 
 const PART_SUFFIX = {
@@ -199,7 +199,7 @@ export class Hero {
       const loading = document.querySelector("#loading");
       if (loading) {
         loading.hidden = false;
-        loading.textContent = "No se pudo cargar el héroe. Recarga.";
+        loading.textContent = "Could not load the hero. Reload.";
       }
     });
   }

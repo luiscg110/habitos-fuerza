@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hábitos Fuerza</title>
+    <title>Habit Force</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,11 +19,11 @@
 
       <header class="top">
         <div class="brand-block">
-          <p class="brand">Hábitos Fuerza</p>
-          <p class="rank" id="rank-label">Rango: Novato</p>
+          <p class="brand">Habit Force</p>
+          <p class="rank" id="rank-label">Rank: Rookie</p>
         </div>
         <div class="power">
-          <span class="power-label">Fuerza</span>
+          <span class="power-label">Strength</span>
           <div class="power-track" aria-hidden="true">
             <div class="power-fill" id="power-fill"></div>
           </div>
@@ -33,21 +33,21 @@
 
       <aside class="panel">
         <div class="panel-head">
-          <h1>Rutina de hoy</h1>
+          <h1>Today's routine</h1>
           <p id="date-label"></p>
         </div>
 
         <ul class="tasks" id="task-list"></ul>
 
         <footer class="panel-foot">
-          <p id="status-line">Empieza hoy. El cuerpo escucha.</p>
-          <button type="button" class="ghost" id="reset-day">Reiniciar día</button>
+          <p id="status-line">Start today. Your body is listening.</p>
+          <button type="button" class="ghost" id="reset-day">Reset day</button>
         </footer>
       </aside>
 
-      <aside class="wardrobe" id="wardrobe" aria-label="Vestimenta">
+      <aside class="wardrobe" id="wardrobe" aria-label="Wardrobe">
         <button type="button" class="wardrobe-toggle" id="wardrobe-toggle" aria-expanded="false" aria-controls="wardrobe-panel">
-          <span>Vestimenta</span>
+          <span>Wardrobe</span>
           <span class="wardrobe-chevron" aria-hidden="true"></span>
         </button>
         <div class="wardrobe-panel" id="wardrobe-panel" hidden>
@@ -56,7 +56,7 @@
       </aside>
 
       <div class="toast" id="toast" hidden></div>
-      <div class="loading" id="loading">Cargando héroe…</div>
+      <div class="loading" id="loading">Loading hero…</div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

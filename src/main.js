@@ -91,7 +91,7 @@ function syncUI() {
   powerFill.style.width = `${pct}%`;
   powerValue.textContent = `${pct}%`;
   dateLabel.textContent = formatToday();
-  rankLabel.textContent = `Rango: ${rank.title}`;
+  rankLabel.textContent = `Rank: ${rank.title}`;
   statusLine.textContent =
     done === 0
       ? rank.line
@@ -100,7 +100,7 @@ function syncUI() {
         : rank.line;
 
   if (rank.title !== lastRank && lastRank) {
-    showToast(`¡Nuevo rango: ${rank.title}!`);
+    showToast(`New rank: ${rank.title}!`);
   }
   lastRank = rank.title;
 
@@ -145,7 +145,7 @@ function renderTasks() {
       state = result.state;
       if (result.newlyCompleted) {
         hero.celebrate();
-        showToast(`+${result.task.gain} · ¡sigues creciendo!`);
+        showToast(`+${result.task.gain} · keep growing!`);
       }
       syncUI();
     });
@@ -195,7 +195,7 @@ function renderOutfitControls() {
     color.type = "color";
     color.className = "outfit-color";
     color.id = `color-${part}`;
-    color.title = `Color de ${PART_LABELS[part]}`;
+    color.title = `${PART_LABELS[part]} color`;
     color.value = colors[part] || "#889988";
     color.addEventListener("input", () => {
       hero.setPartColor(part, color.value);
@@ -204,12 +204,12 @@ function renderOutfitControls() {
     const clear = document.createElement("button");
     clear.type = "button";
     clear.className = "outfit-color-clear";
-    clear.title = "Color original";
+    clear.title = "Original color";
     clear.textContent = "↺";
     clear.addEventListener("click", () => {
       hero.setPartColor(part, "");
       color.value = "#889988";
-      showToast(`${PART_LABELS[part]}: color original`);
+      showToast(`${PART_LABELS[part]}: original color`);
     });
 
     row.append(select, color, clear);
@@ -233,7 +233,7 @@ resetBtn.addEventListener("click", () => {
     if (color) color.value = "#889988";
   }
   syncOutfitSelects();
-  showToast("Día reiniciado. A por todas.");
+  showToast("Day reset. Let's go.");
   syncUI();
 });
 

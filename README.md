@@ -1,14 +1,14 @@
-# Hábitos Fuerza
+# Habit Force
 
-App web con **Three.js** y un héroe con ropa (Quaternius Adventurer, CC0): completar hábitos lo hace más fuerte.
+Web app with **Three.js** and a clothed hero (Quaternius Adventurer, CC0): completing daily habits makes them stronger.
 
-Rangos: Novato → En marcha → Firme → Guerrero → Imparable → Bestia.
+Ranks: Rookie → Rolling → Steady → Warrior → Unstoppable → Beast.
 
-El fondo cruza dos HDRI de [Poly Haven](https://polyhaven.com/) (CC0): taller abandonado → lobby morado, según la fuerza.
+The background crossfades two [Poly Haven](https://polyhaven.com/) HDRIs (CC0): abandoned workshop → purple neon lobby, based on strength.
 
-Los prompts de cada cambio están en [`PROMPTS.md`](./PROMPTS.md).
+User prompts for each change are in [`PROMPTS.md`](./PROMPTS.md).
 
-## Cómo correr
+## Run
 
 ```bash
 npm install

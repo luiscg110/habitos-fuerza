@@ -168,6 +168,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > entre 58 y 72 se ve un poco oscuro
 
+---
+
+### App UI in English
+**Prompt:**
+> que toda la app este en ingles
+
 ## Convención de commit
 
 ```

@@ -283,7 +283,7 @@ export function createScene(canvas) {
       h.update(hero.muscle, hero.pulse, 1);
     })
     .catch((err) => {
-      console.error("No se pudo cargar el ambiente HDRI", err);
+      console.error("Could not load HDRI environment", err);
     });
 
   let last = performance.now();
