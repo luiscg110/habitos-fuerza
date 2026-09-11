@@ -32,9 +32,15 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 
 ---
 
-### Siguiente — este archivo
+### `9cc3d98` — Track user prompts alongside each commit.
 **Prompt:**
 > guarda los propmts con los commits
+
+---
+
+### Pendiente / siguiente — Adventurer con ropa
+**Prompt:**
+> ese ultimo tambien es una mierda, mejor vuelve al modelo con ropa
 
 ## Convención de commit
 

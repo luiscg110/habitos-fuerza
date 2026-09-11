@@ -19,22 +19,21 @@ export function rankFor(ratio) {
   return current;
 }
 
-/** Huesos Mixamo: engrose uniforme (no rompe el skinning). */
 const BULK_BONES = [
-  { name: "mixamorig:Spine", max: 1.12 },
-  { name: "mixamorig:Spine1", max: 1.16 },
-  { name: "mixamorig:Spine2", max: 1.2 },
-  { name: "mixamorig:LeftShoulder", max: 1.18 },
-  { name: "mixamorig:RightShoulder", max: 1.18 },
-  { name: "mixamorig:LeftArm", max: 1.28 },
-  { name: "mixamorig:RightArm", max: 1.28 },
-  { name: "mixamorig:LeftForeArm", max: 1.16 },
-  { name: "mixamorig:RightForeArm", max: 1.16 },
-  { name: "mixamorig:LeftUpLeg", max: 1.2 },
-  { name: "mixamorig:RightUpLeg", max: 1.2 },
-  { name: "mixamorig:LeftLeg", max: 1.12 },
-  { name: "mixamorig:RightLeg", max: 1.12 },
-  { name: "mixamorig:Neck", max: 1.08 },
+  { name: "Chest", max: 1.22 },
+  { name: "Torso", max: 1.14 },
+  { name: "Abdomen", max: 1.1 },
+  { name: "Shoulder.L", max: 1.16 },
+  { name: "Shoulder.R", max: 1.16 },
+  { name: "UpperArm.L", max: 1.26 },
+  { name: "UpperArm.R", max: 1.26 },
+  { name: "LowerArm.L", max: 1.14 },
+  { name: "LowerArm.R", max: 1.14 },
+  { name: "UpperLeg.L", max: 1.18 },
+  { name: "UpperLeg.R", max: 1.18 },
+  { name: "LowerLeg.L", max: 1.12 },
+  { name: "LowerLeg.R", max: 1.12 },
+  { name: "Neck", max: 1.08 },
 ];
 
 export class Hero {
@@ -83,27 +82,25 @@ export class Hero {
 
   async #load() {
     const loader = new GLTFLoader();
-    // Mixamo Xbot: malla humana real, cuerpo a la vista (no cajas)
+    // Quaternius Adventurer (CC0) — héroe con ropa
     const gltf = await loader.loadAsync("/models/hero.glb");
     const model = gltf.scene;
 
     model.traverse((obj) => {
-      // Oculta el esqueleto helper; deja la superficie del cuerpo
-      if (obj.isMesh && /joint/i.test(obj.name)) {
-        obj.visible = false;
-        return;
-      }
       if (obj.isMesh) {
+        // Sin mochila: se ve mejor el personaje
+        if (/backpack/i.test(obj.name)) {
+          obj.visible = false;
+          return;
+        }
         obj.castShadow = true;
         obj.receiveShadow = true;
         const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
         for (const mat of mats) {
           if (!mat) continue;
-          // Tinte piel / atleta
-          if (mat.color) mat.color.lerp(new THREE.Color(0xd4a07a), 0.55);
-          mat.roughness = 0.5;
-          mat.metalness = 0.08;
-          mat.envMapIntensity = 1.2;
+          mat.roughness = Math.min(mat.roughness ?? 0.7, 0.58);
+          mat.metalness = Math.min(mat.metalness ?? 0.05, 0.15);
+          mat.envMapIntensity = 1.15;
         }
       }
       if (obj.isBone) {
@@ -122,24 +119,28 @@ export class Hero {
       -box.min.y * this.baseScale,
       -center.z * this.baseScale,
     );
-    model.rotation.y = Math.PI * 0.15;
+    model.rotation.y = Math.PI * 0.18;
 
     this.model = model;
     this.root.add(model);
 
     if (gltf.animations?.length) {
       this.mixer = new THREE.AnimationMixer(model);
-      const idle =
-        gltf.animations.find((a) => /idle/i.test(a.name)) || gltf.animations[0];
-      const flex =
-        gltf.animations.find((a) => /agree|wave|punch/i.test(a.name)) ||
-        gltf.animations.find((a) => /headShake/i.test(a.name));
+      const clips = gltf.animations;
+      const idleClip =
+        clips.find((a) => a.name.includes("Idle_Neutral")) ||
+        clips.find((a) => /\|Idle$/.test(a.name)) ||
+        clips[0];
+      const flexClip =
+        clips.find((a) => a.name.includes("Punch_Right")) ||
+        clips.find((a) => a.name.includes("Wave")) ||
+        clips.find((a) => a.name.includes("Interact"));
 
-      this.idleAction = this.mixer.clipAction(idle);
+      this.idleAction = this.mixer.clipAction(idleClip);
       this.idleAction.play();
 
-      if (flex) {
-        this.flexAction = this.mixer.clipAction(flex);
+      if (flexClip) {
+        this.flexAction = this.mixer.clipAction(flexClip);
         this.flexAction.setLoop(THREE.LoopOnce);
         this.flexAction.clampWhenFinished = true;
       }
@@ -185,12 +186,11 @@ export class Hero {
       bone.scale.setScalar(THREE.MathUtils.lerp(1, max, pump));
     }
 
-    // Más ancho = más fuerte, sin volver a cajas
-    const sx = this.baseScale * (1 + pump * 0.16);
+    const sx = this.baseScale * (1 + pump * 0.12);
     const sy = this.baseScale * (1 + pump * 0.03);
-    const sz = this.baseScale * (1 + pump * 0.14);
+    const sz = this.baseScale * (1 + pump * 0.1);
     this.model.scale.set(sx, sy, sz);
-    this.model.rotation.y = Math.PI * 0.15 + Math.sin(this.time * 0.4) * 0.08;
+    this.model.rotation.y = Math.PI * 0.18 + Math.sin(this.time * 0.4) * 0.08;
 
     const aura =
       0.9 + m * 0.55 + this.pulse * 0.4 + Math.sin(this.time * 3) * 0.03;
