@@ -7,6 +7,7 @@ import {
   PART_LABELS,
   loadOutfitSelection,
   headForStrength,
+  legsForStrength,
 } from "./character.js";
 import {
   TASKS,
@@ -84,14 +85,19 @@ function syncUI() {
 
   hero.setMuscle(ratio);
 
-  // Cabeza progresa con la fuerza: Hoodie → Traje → Aventurero
-  const headId = headForStrength(ratio);
-  if (hero.selection?.head !== headId) {
-    hero.setPart("head", headId);
-  }
-  const headSelect = document.querySelector("#outfit-head");
-  if (headSelect && headSelect.value !== headId) {
-    headSelect.value = headId;
+  // Piezas que progresan con la fuerza
+  const autoParts = {
+    head: headForStrength(ratio),
+    legs: legsForStrength(ratio),
+  };
+  for (const [part, outfitId] of Object.entries(autoParts)) {
+    if (hero.selection?.[part] !== outfitId) {
+      hero.setPart(part, outfitId);
+    }
+    const select = document.querySelector(`#outfit-${part}`);
+    if (select && select.value !== outfitId) {
+      select.value = outfitId;
+    }
   }
 }
 
@@ -127,6 +133,11 @@ function renderTasks() {
 
 function renderOutfitControls() {
   const selection = loadOutfitSelection();
+  const lockedParts = {
+    head: ["casual", "suit", "adventurer"],
+    legs: ["casual", "punk", "suit", "adventurer"],
+  };
+
   outfitControls.innerHTML = "";
 
   for (const part of PART_KEYS) {
@@ -135,20 +146,20 @@ function renderOutfitControls() {
 
     const label = document.createElement("label");
     label.htmlFor = `outfit-${part}`;
-    label.textContent =
-      part === "head" ? `${PART_LABELS[part]} (por fuerza)` : PART_LABELS[part];
+    label.textContent = lockedParts[part]
+      ? `${PART_LABELS[part]} (por fuerza)`
+      : PART_LABELS[part];
 
     const select = document.createElement("select");
     select.id = `outfit-${part}`;
     select.dataset.part = part;
-    if (part === "head") {
+    if (lockedParts[part]) {
       select.disabled = true;
       select.title = "Cambia sola con tu nivel de fuerza";
     }
 
     for (const outfit of Object.values(OUTFITS)) {
-      // Cabeza solo usa Hoodie / Traje / Aventurero
-      if (part === "head" && !["casual", "suit", "adventurer"].includes(outfit.id)) {
+      if (lockedParts[part] && !lockedParts[part].includes(outfit.id)) {
         continue;
       }
       const option = document.createElement("option");
@@ -158,7 +169,7 @@ function renderOutfitControls() {
       select.appendChild(option);
     }
 
-    if (part !== "head") {
+    if (!lockedParts[part]) {
       select.addEventListener("change", () => {
         hero.setPart(part, select.value);
         const name = OUTFITS[select.value]?.label ?? select.value;

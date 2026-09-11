@@ -90,7 +90,7 @@ export function defaultOutfitSelection() {
   return {
     head: "casual",
     body: "adventurer",
-    legs: "adventurer",
+    legs: "casual",
     feet: "adventurer",
   };
 }
@@ -99,6 +99,14 @@ export function defaultOutfitSelection() {
 export function headForStrength(ratio) {
   if (ratio < 1 / 3) return "casual";
   if (ratio < 2 / 3) return "suit";
+  return "adventurer";
+}
+
+/** Piernas según fuerza: Hoodie → Punk → Traje → Aventurero */
+export function legsForStrength(ratio) {
+  if (ratio < 0.25) return "casual";
+  if (ratio < 0.5) return "punk";
+  if (ratio < 0.75) return "suit";
   return "adventurer";
 }
 
