@@ -84,11 +84,17 @@ const BULK_BONES = [
   { name: "Neck", max: 1.08 },
 ];
 
-const OUTFIT_STORAGE = "habitos-fuerza-outfit-v1";
+const OUTFIT_STORAGE = "habitos-fuerza-outfit-v2";
+
+const HEAD_POOL = ["casual", "suit", "adventurer"];
+
+function randomHead() {
+  return HEAD_POOL[Math.floor(Math.random() * HEAD_POOL.length)];
+}
 
 export function defaultOutfitSelection() {
   return {
-    head: "adventurer",
+    head: randomHead(),
     body: "adventurer",
     legs: "adventurer",
     feet: "adventurer",

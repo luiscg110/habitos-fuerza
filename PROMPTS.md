@@ -60,6 +60,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > Aparecen todas las opciones puestas en el personaje pero no se permiten quitar.
 
+---
+
+### Random head outfit
+**Prompt:**
+> que la cabeza 33 % sea hoodie, 33% mas traje, 33% adventure
+
 ## Convención de commit
 
 ```
