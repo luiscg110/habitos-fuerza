@@ -42,6 +42,18 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > ese ultimo tambien es una mierda, mejor vuelve al modelo con ropa
 
+---
+
+### `ac09cad` — Record Adventurer restore prompt against commit 1a0ca83.
+**Prompt:**
+> ese ultimo tambien es una mierda, mejor vuelve al modelo con ropa
+
+---
+
+### Outfit dropdowns — Add modular outfit dropdowns for head, body, legs, and feet.
+**Prompt:**
+> dame dropdowns para cambiarlo
+
 ## Convención de commit
 
 ```

@@ -1,6 +1,12 @@
 import "./style.css";
 import { createScene } from "./scene.js";
-import { rankFor } from "./character.js";
+import {
+  rankFor,
+  OUTFITS,
+  PART_KEYS,
+  PART_LABELS,
+  loadOutfitSelection,
+} from "./character.js";
 import {
   TASKS,
   loadState,
@@ -20,6 +26,7 @@ const dateLabel = document.querySelector("#date-label");
 const rankLabel = document.querySelector("#rank-label");
 const toast = document.querySelector("#toast");
 const resetBtn = document.querySelector("#reset-day");
+const outfitControls = document.querySelector("#outfit-controls");
 
 const { hero } = createScene(canvas);
 
@@ -57,7 +64,11 @@ function syncUI() {
   dateLabel.textContent = formatToday();
   rankLabel.textContent = `Rango: ${rank.title}`;
   statusLine.textContent =
-    done === 0 ? rank.line : done < TASKS.length ? `${done}/${TASKS.length} · ${rank.line}` : rank.line;
+    done === 0
+      ? rank.line
+      : done < TASKS.length
+        ? `${done}/${TASKS.length} · ${rank.line}`
+        : rank.line;
 
   if (rank.title !== lastRank && lastRank) {
     showToast(`¡Nuevo rango: ${rank.title}!`);
@@ -103,6 +114,40 @@ function renderTasks() {
   }
 }
 
+function renderOutfitControls() {
+  const selection = loadOutfitSelection();
+  outfitControls.innerHTML = "";
+
+  for (const part of PART_KEYS) {
+    const field = document.createElement("div");
+    field.className = "outfit-field";
+
+    const label = document.createElement("label");
+    label.htmlFor = `outfit-${part}`;
+    label.textContent = PART_LABELS[part];
+
+    const select = document.createElement("select");
+    select.id = `outfit-${part}`;
+    select.dataset.part = part;
+
+    for (const outfit of Object.values(OUTFITS)) {
+      const option = document.createElement("option");
+      option.value = outfit.id;
+      option.textContent = outfit.label;
+      if (selection[part] === outfit.id) option.selected = true;
+      select.appendChild(option);
+    }
+
+    select.addEventListener("change", () => {
+      hero.setPart(part, select.value);
+      showToast(`${PART_LABELS[part]}: ${OUTFITS[select.value].label}`);
+    });
+
+    field.append(label, select);
+    outfitControls.appendChild(field);
+  }
+}
+
 resetBtn.addEventListener("click", () => {
   state = resetDay(state);
   hero.setMuscle(0);
@@ -112,4 +157,5 @@ resetBtn.addEventListener("click", () => {
 });
 
 renderTasks();
+renderOutfitControls();
 syncUI();
