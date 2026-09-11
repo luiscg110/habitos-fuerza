@@ -28,9 +28,16 @@ const dateLabel = document.querySelector("#date-label");
 const rankLabel = document.querySelector("#rank-label");
 const toast = document.querySelector("#toast");
 const resetBtn = document.querySelector("#reset-day");
-const outfitControls = document.querySelector("#outfit-controls");
+const wardrobe = document.querySelector("#wardrobe");
+const wardrobeToggle = document.querySelector("#wardrobe-toggle");
+const wardrobePanel = document.querySelector("#wardrobe-panel");
 
-const { hero } = createScene(canvas);
+wardrobeToggle.addEventListener("click", () => {
+  const open = wardrobe.classList.toggle("is-open");
+  wardrobePanel.hidden = !open;
+  wardrobeToggle.setAttribute("aria-expanded", String(open));
+});
+
 
 let state = loadState();
 let toastTimer;

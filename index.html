@@ -45,9 +45,14 @@
         </footer>
       </aside>
 
-      <aside class="wardrobe" aria-label="Vestimenta">
-        <h2>Vestimenta</h2>
-        <div class="wardrobe-grid" id="outfit-controls"></div>
+      <aside class="wardrobe" id="wardrobe" aria-label="Vestimenta">
+        <button type="button" class="wardrobe-toggle" id="wardrobe-toggle" aria-expanded="false" aria-controls="wardrobe-panel">
+          <span>Vestimenta</span>
+          <span class="wardrobe-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wardrobe-panel" id="wardrobe-panel" hidden>
+          <div class="wardrobe-grid" id="outfit-controls"></div>
+        </div>
       </aside>
 
       <div class="toast" id="toast" hidden></div>

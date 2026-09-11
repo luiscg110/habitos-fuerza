@@ -108,6 +108,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > pero no se estan aplicando las reglas de vestimentas de porcentjae que definimos
 
+---
+
+### Collapsible wardrobe menu
+**Prompt:**
+> que vetimenta el menu sea algo que se esconde y se abre
+
 ## Convención de commit
 
 ```
