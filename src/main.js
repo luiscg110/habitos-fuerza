@@ -6,6 +6,7 @@ import {
   PART_KEYS,
   PART_LABELS,
   loadOutfitSelection,
+  defaultOutfitSelection,
 } from "./character.js";
 import {
   TASKS,
@@ -175,6 +176,9 @@ resetBtn.addEventListener("click", () => {
   state = resetDay(state);
   hero.setMuscle(0);
   lastRank = "";
+  const defaults = defaultOutfitSelection();
+  hero.applyOutfit(defaults);
+  syncOutfitSelects();
   showToast("Día reiniciado. A por todas.");
   syncUI();
 });

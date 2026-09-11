@@ -96,6 +96,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > para pies es aventurero, punk
 
+---
+
+### Reset outfit with day
+**Prompt:**
+> cuando pulse reiniciar dia la vestimenta se reinicia
+
 ## Convención de commit
 
 ```
