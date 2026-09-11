@@ -120,6 +120,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > puedes editar el color de las vestimentas ?
 
+---
+
+### Restore previous hero size
+**Prompt:**
+> quita ese commit estaba mejor como antes
+
 ## Convención de commit
 
 ```
