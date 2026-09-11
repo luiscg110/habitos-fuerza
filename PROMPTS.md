@@ -126,6 +126,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > quita ese commit estaba mejor como antes
 
+---
+
+### Environment poor → rich with strength
+**Prompt:**
+> puedes ponerle un ambiente pobre a un ambiente rico mientras que vamos subiendo de nivel
+
 ## Convención de commit
 
 ```
