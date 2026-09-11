@@ -144,6 +144,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > se ve muy brillante, y como estaba antes rea mejor, que era coo un fondo morado el rico y antes no se veia tan borroso el fondo y en los niveles intermidos aun mas
 
+---
+
+### Restore purple disco rich background
+**Prompt:**
+> el fondo de rico era un fondo morado que habias puesto era parecido a una disco no me acuerdo
+
 ## Convención de commit
 
 ```

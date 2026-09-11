@@ -5,7 +5,7 @@ import { Hero } from "./character.js";
 /**
  * Ambientes reales (Poly Haven, CC0):
  * - pobre: abandoned_workshop
- * - rico: newman_lobby (morado)
+ * - rico: newman_lobby (neón morado tipo disco / TRAPDOOR)
  *
  * HDRI en skybox shader (nítido, sin blur) + PMREM para IBL.
  * Cruce suave por mixFactor; brillo contenido.
@@ -83,6 +83,8 @@ async function loadHabitat(renderer, scene, lights) {
   const sky = new THREE.Mesh(new THREE.SphereGeometry(50, 64, 32), skyMat);
   sky.frustumCulled = false;
   sky.renderOrder = -100;
+  // Orienta el muro neón morado (TRAPDOOR) detrás del héroe
+  sky.rotation.y = Math.PI * 0.72;
   scene.add(sky);
 
   scene.background = null;
@@ -155,11 +157,12 @@ async function loadHabitat(renderer, scene, lights) {
   function updateCss(t) {
     const atm = document.querySelector(".atmosphere");
     if (!atm) return;
-    const veil = 0.18 - t * 0.06;
-    const purple = 0.04 + t * 0.1;
+    const veil = 0.14 - t * 0.05;
+    const purple = 0.06 + t * 0.16;
     atm.style.background = `
-      radial-gradient(ellipse 65% 50% at 62% 40%, rgba(120, 80, 180, ${purple}), transparent 62%),
-      linear-gradient(180deg, rgba(0,0,0,${veil * 0.35}), rgba(0,0,0,${veil}) 100%)
+      radial-gradient(ellipse 70% 55% at 58% 38%, rgba(150, 60, 220, ${purple}), transparent 60%),
+      radial-gradient(ellipse 40% 35% at 75% 70%, rgba(80, 40, 160, ${purple * 0.7}), transparent 55%),
+      linear-gradient(180deg, rgba(0,0,0,${veil * 0.25}), rgba(0,0,0,${veil}) 100%)
     `;
   }
 
@@ -172,14 +175,15 @@ async function loadHabitat(renderer, scene, lights) {
       const ease = t * t * (3 - 2 * t);
 
       skyMat.uniforms.mixFactor.value = ease;
-      skyMat.uniforms.bgGain.value = THREE.MathUtils.lerp(0.5, 0.62, ease);
+      // Más ganancia al lado rico para que se note el neón morado tipo disco
+      skyMat.uniforms.bgGain.value = THREE.MathUtils.lerp(0.48, 0.9, ease);
 
       if (ease < 0.5) {
         scene.environment = poorEnv;
-        scene.environmentIntensity = THREE.MathUtils.lerp(0.55, 0.7, ease * 2);
+        scene.environmentIntensity = THREE.MathUtils.lerp(0.55, 0.72, ease * 2);
       } else {
         scene.environment = richEnv;
-        scene.environmentIntensity = THREE.MathUtils.lerp(0.7, 0.85, (ease - 0.5) * 2);
+        scene.environmentIntensity = THREE.MathUtils.lerp(0.72, 0.95, (ease - 0.5) * 2);
       }
 
       ground.material.roughness = THREE.MathUtils.lerp(0.92, 0.4, ease);
@@ -190,20 +194,20 @@ async function loadHabitat(renderer, scene, lights) {
       ring.material.color.copy(tmp);
       tmp.copy(poorEmi).lerp(richEmi, ease);
       ring.material.emissive.copy(tmp);
-      ring.material.emissiveIntensity = 0.2 + ease * 0.35 + pulse * 0.2;
+      ring.material.emissiveIntensity = 0.2 + ease * 0.45 + pulse * 0.2;
       ring.material.opacity = 0.45 + ease * 0.2;
 
-      lights.hemi.intensity = 0.35 + ease * 0.15;
-      lights.key.intensity = 1.1 + ease * 0.35;
-      lights.fill.intensity = 0.4 + ease * 0.15;
-      lights.rim.intensity = 0.45 + ease * 0.55 + pulse * 0.8;
+      lights.hemi.intensity = 0.35 + ease * 0.2;
+      lights.key.intensity = 1.05 + ease * 0.25;
+      lights.fill.intensity = 0.35 + ease * 0.25;
+      lights.rim.intensity = 0.4 + ease * 0.9 + pulse * 0.8;
       lights.rim.color.setRGB(
-        THREE.MathUtils.lerp(1, 0.75, ease),
-        THREE.MathUtils.lerp(0.7, 0.55, ease),
-        THREE.MathUtils.lerp(0.4, 0.95, ease),
+        THREE.MathUtils.lerp(1, 0.72, ease),
+        THREE.MathUtils.lerp(0.7, 0.35, ease),
+        THREE.MathUtils.lerp(0.4, 1.0, ease),
       );
 
-      renderer.toneMappingExposure = 0.82 + ease * 0.08;
+      renderer.toneMappingExposure = 0.8 + ease * 0.12;
       updateCss(ease);
     },
   };
