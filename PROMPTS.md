@@ -78,6 +78,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > para piernas seria hoddie punk traje aventurero
 
+---
+
+### Body by strength level
+**Prompt:**
+> cuerpo traje, hoddie, aventurero
+
 ## Convención de commit
 
 ```

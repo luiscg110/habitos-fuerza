@@ -89,7 +89,7 @@ const OUTFIT_STORAGE = "habitos-fuerza-outfit-v3";
 export function defaultOutfitSelection() {
   return {
     head: "casual",
-    body: "adventurer",
+    body: "suit",
     legs: "casual",
     feet: "adventurer",
   };
@@ -107,6 +107,13 @@ export function legsForStrength(ratio) {
   if (ratio < 0.25) return "casual";
   if (ratio < 0.5) return "punk";
   if (ratio < 0.75) return "suit";
+  return "adventurer";
+}
+
+/** Cuerpo según fuerza: Traje → Hoodie → Aventurero */
+export function bodyForStrength(ratio) {
+  if (ratio < 1 / 3) return "suit";
+  if (ratio < 2 / 3) return "casual";
   return "adventurer";
 }
 

@@ -8,6 +8,7 @@ import {
   loadOutfitSelection,
   headForStrength,
   legsForStrength,
+  bodyForStrength,
 } from "./character.js";
 import {
   TASKS,
@@ -88,6 +89,7 @@ function syncUI() {
   // Piezas que progresan con la fuerza
   const autoParts = {
     head: headForStrength(ratio),
+    body: bodyForStrength(ratio),
     legs: legsForStrength(ratio),
   };
   for (const [part, outfitId] of Object.entries(autoParts)) {
@@ -135,6 +137,7 @@ function renderOutfitControls() {
   const selection = loadOutfitSelection();
   const lockedParts = {
     head: ["casual", "suit", "adventurer"],
+    body: ["suit", "casual", "adventurer"],
     legs: ["casual", "punk", "suit", "adventurer"],
   };
 
