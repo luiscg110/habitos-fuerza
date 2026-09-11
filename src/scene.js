@@ -183,7 +183,8 @@ async function loadHabitat(renderer, scene, lights) {
         scene.environmentIntensity = THREE.MathUtils.lerp(0.55, 0.72, ease * 2);
       } else {
         scene.environment = richEnv;
-        scene.environmentIntensity = THREE.MathUtils.lerp(0.72, 0.95, (ease - 0.5) * 2);
+        // Un poco más de IBL al entrar al lobby (58–72%)
+        scene.environmentIntensity = THREE.MathUtils.lerp(0.85, 1.05, (ease - 0.5) * 2);
       }
 
       ground.material.roughness = THREE.MathUtils.lerp(0.92, 0.4, ease);
@@ -202,14 +203,17 @@ async function loadHabitat(renderer, scene, lights) {
       lights.key.color.setRGB(1, THREE.MathUtils.lerp(0.94, 0.9, ease), THREE.MathUtils.lerp(0.85, 0.72, ease));
       lights.fill.intensity = 0.4 + ease * 0.35;
 
-      // Luz amarilla solo de medio (50%) para arriba
-      const warmT = THREE.MathUtils.smoothstep(ease, 0.5, 1);
-      lights.rim.intensity = 0.45 + warmT * 1.6 + pulse * 1.1;
-      lights.rim.color.setRGB(1, THREE.MathUtils.lerp(0.72, 0.82, warmT), THREE.MathUtils.lerp(0.4, 0.48, warmT));
-      lights.warm.intensity = warmT * (1.95 + pulse * 0.6);
-      lights.warm.color.setRGB(1, THREE.MathUtils.lerp(0.85, 0.78, warmT), THREE.MathUtils.lerp(0.55, 0.42, warmT));
+      // Amarilla de medio↑, pero llega fuerte ya ~58–72% (antes quedaba oscuro ahí)
+      const warmT = THREE.MathUtils.smoothstep(ease, 0.5, 0.78);
+      lights.rim.intensity = 0.5 + warmT * 1.7 + pulse * 1.1;
+      lights.rim.color.setRGB(1, THREE.MathUtils.lerp(0.72, 0.84, warmT), THREE.MathUtils.lerp(0.4, 0.5, warmT));
+      lights.warm.intensity = warmT * (2.35 + pulse * 0.65);
+      lights.warm.color.setRGB(1, THREE.MathUtils.lerp(0.86, 0.8, warmT), THREE.MathUtils.lerp(0.55, 0.45, warmT));
+      // Extra de key en la franja media-alta del lobby morado
+      lights.key.intensity += warmT * 0.55;
+      lights.hemi.intensity += warmT * 0.18;
 
-      renderer.toneMappingExposure = 0.85 + warmT * 0.18;
+      renderer.toneMappingExposure = 0.85 + warmT * 0.22;
       updateCss(ease);
     },
   };

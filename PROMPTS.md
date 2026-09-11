@@ -162,6 +162,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > aplicala de medio para arriba
 
+---
+
+### Brighten 58–72% band
+**Prompt:**
+> entre 58 y 72 se ve un poco oscuro
+
 ## Convención de commit
 
 ```
