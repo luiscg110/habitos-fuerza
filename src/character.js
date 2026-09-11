@@ -67,26 +67,22 @@ const PART_SUFFIX = {
   feet: "Feet",
 };
 
-/** Multiplicadores de músculo (más bajos = crece menos al máximo). */
 const BULK_BONES = [
-  { name: "Chest", max: 1.14 },
-  { name: "Torso", max: 1.09 },
-  { name: "Abdomen", max: 1.06 },
-  { name: "Shoulder.L", max: 1.1 },
-  { name: "Shoulder.R", max: 1.1 },
-  { name: "UpperArm.L", max: 1.16 },
-  { name: "UpperArm.R", max: 1.16 },
-  { name: "LowerArm.L", max: 1.08 },
-  { name: "LowerArm.R", max: 1.08 },
-  { name: "UpperLeg.L", max: 1.11 },
-  { name: "UpperLeg.R", max: 1.11 },
-  { name: "LowerLeg.L", max: 1.07 },
-  { name: "LowerLeg.R", max: 1.07 },
-  { name: "Neck", max: 1.05 },
+  { name: "Chest", max: 1.22 },
+  { name: "Torso", max: 1.14 },
+  { name: "Abdomen", max: 1.1 },
+  { name: "Shoulder.L", max: 1.16 },
+  { name: "Shoulder.R", max: 1.16 },
+  { name: "UpperArm.L", max: 1.26 },
+  { name: "UpperArm.R", max: 1.26 },
+  { name: "LowerArm.L", max: 1.14 },
+  { name: "LowerArm.R", max: 1.14 },
+  { name: "UpperLeg.L", max: 1.18 },
+  { name: "UpperLeg.R", max: 1.18 },
+  { name: "LowerLeg.L", max: 1.12 },
+  { name: "LowerLeg.R", max: 1.12 },
+  { name: "Neck", max: 1.08 },
 ];
-
-/** Altura objetivo en unidades de escena (antes 1.9; más bajo = empieza más pequeño). */
-const HERO_HEIGHT = 1.35;
 
 const OUTFIT_STORAGE = "habitos-fuerza-outfit-v3";
 
@@ -295,7 +291,7 @@ export class Hero {
       const box = new THREE.Box3().setFromObject(model);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-      const scale = HERO_HEIGHT / Math.max(size.y, 0.001);
+      const scale = 1.9 / Math.max(size.y, 0.001);
       model.scale.setScalar(scale);
       model.position.set(
         -center.x * scale,
@@ -453,9 +449,9 @@ export class Hero {
       bone.scale.setScalar(THREE.MathUtils.lerp(1, max, pump));
     }
 
-    const sx = this.baseScale * (1 + pump * 0.07);
-    const sy = this.baseScale * (1 + pump * 0.02);
-    const sz = this.baseScale * (1 + pump * 0.06);
+    const sx = this.baseScale * (1 + pump * 0.12);
+    const sy = this.baseScale * (1 + pump * 0.03);
+    const sz = this.baseScale * (1 + pump * 0.1);
     const rotY = Math.PI * 0.18 + Math.sin(this.time * 0.4) * 0.08;
     for (const model of this.models) {
       model.scale.set(sx, sy, sz);
