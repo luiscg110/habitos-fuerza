@@ -1,5 +1,6 @@
 import "./style.css";
 import { createScene } from "./scene.js";
+import { rankFor } from "./character.js";
 import {
   TASKS,
   loadState,
@@ -16,6 +17,7 @@ const powerFill = document.querySelector("#power-fill");
 const powerValue = document.querySelector("#power-value");
 const statusLine = document.querySelector("#status-line");
 const dateLabel = document.querySelector("#date-label");
+const rankLabel = document.querySelector("#rank-label");
 const toast = document.querySelector("#toast");
 const resetBtn = document.querySelector("#reset-day");
 
@@ -23,6 +25,7 @@ const { hero } = createScene(canvas);
 
 let state = loadState();
 let toastTimer;
+let lastRank = "";
 
 const checkSvg = `
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -47,18 +50,19 @@ function syncUI() {
   const ratio = muscleRatio(state);
   const pct = Math.round(ratio * 100);
   const done = completedCount(state);
+  const rank = rankFor(ratio);
 
   powerFill.style.width = `${pct}%`;
   powerValue.textContent = `${pct}%`;
   dateLabel.textContent = formatToday();
+  rankLabel.textContent = `Rango: ${rank.title}`;
+  statusLine.textContent =
+    done === 0 ? rank.line : done < TASKS.length ? `${done}/${TASKS.length} · ${rank.line}` : rank.line;
 
-  if (done === 0) {
-    statusLine.textContent = "Completa hábitos y crece músculo.";
-  } else if (done < TASKS.length) {
-    statusLine.textContent = `${done}/${TASKS.length} hechos · el cuerpo responde.`;
-  } else {
-    statusLine.textContent = "Día completo. Estás en modo bestia.";
+  if (rank.title !== lastRank && lastRank) {
+    showToast(`¡Nuevo rango: ${rank.title}!`);
   }
+  lastRank = rank.title;
 
   for (const btn of taskList.querySelectorAll(".task")) {
     const id = btn.dataset.id;
@@ -90,7 +94,7 @@ function renderTasks() {
       state = result.state;
       if (result.newlyCompleted) {
         hero.celebrate();
-        showToast(`+${result.task.gain} músculo · ${result.task.title}`);
+        showToast(`+${result.task.gain} · ¡sigues creciendo!`);
       }
       syncUI();
     });
@@ -102,7 +106,8 @@ function renderTasks() {
 resetBtn.addEventListener("click", () => {
   state = resetDay(state);
   hero.setMuscle(0);
-  showToast("Día reiniciado");
+  lastRank = "";
+  showToast("Día reiniciado. A por todas.");
   syncUI();
 });
 

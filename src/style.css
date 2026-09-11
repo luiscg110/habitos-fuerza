@@ -50,8 +50,8 @@ body {
   pointer-events: none;
   background:
     radial-gradient(ellipse 70% 55% at 62% 42%, rgba(214, 255, 75, 0.12), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 18% 80%, rgba(255, 122, 69, 0.16), transparent 55%),
-    linear-gradient(180deg, rgba(4, 25, 22, 0.15), rgba(4, 25, 22, 0.55) 70%, rgba(4, 25, 22, 0.85));
+    radial-gradient(ellipse 50% 40% at 18% 80%, rgba(255, 122, 69, 0.14), transparent 55%),
+    linear-gradient(180deg, rgba(4, 25, 22, 0.08), rgba(4, 25, 22, 0.35) 70%, rgba(4, 25, 22, 0.7));
 }
 
 .top {
@@ -76,6 +76,17 @@ body {
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   max-width: 8ch;
   animation: brand-in 0.9s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.rank {
+  margin-top: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  animation: fade-up 0.8s 0.1s cubic-bezier(0.2, 0.9, 0.2, 1) both;
 }
 
 .power {
@@ -300,6 +311,21 @@ body {
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.loading {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  padding: 0.9rem 1.3rem;
+  border-radius: 999px;
+  background: rgba(12, 8, 8, 0.85);
+  border: 1px solid rgba(255, 77, 77, 0.35);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow);
 }
 
 @keyframes brand-in {

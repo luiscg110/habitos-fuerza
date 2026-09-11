@@ -18,7 +18,10 @@
       <div class="atmosphere" aria-hidden="true"></div>
 
       <header class="top">
-        <p class="brand">Hábitos Fuerza</p>
+        <div class="brand-block">
+          <p class="brand">Hábitos Fuerza</p>
+          <p class="rank" id="rank-label">Rango: Novato</p>
+        </div>
         <div class="power">
           <span class="power-label">Fuerza</span>
           <div class="power-track" aria-hidden="true">
@@ -37,12 +40,13 @@
         <ul class="tasks" id="task-list"></ul>
 
         <footer class="panel-foot">
-          <p id="status-line">Completa hábitos y crece músculo.</p>
+          <p id="status-line">Empieza hoy. El cuerpo escucha.</p>
           <button type="button" class="ghost" id="reset-day">Reiniciar día</button>
         </footer>
       </aside>
 
       <div class="toast" id="toast" hidden></div>
+      <div class="loading" id="loading" hidden>Listo</div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
