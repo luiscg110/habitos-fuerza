@@ -140,7 +140,8 @@ function renderOutfitControls() {
 
     select.addEventListener("change", () => {
       hero.setPart(part, select.value);
-      showToast(`${PART_LABELS[part]}: ${OUTFITS[select.value].label}`);
+      const label = OUTFITS[select.value]?.label ?? select.value;
+      showToast(`${PART_LABELS[part]}: ${label}`);
     });
 
     field.append(label, select);

@@ -50,9 +50,15 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 
 ---
 
-### Outfit dropdowns — Add modular outfit dropdowns for head, body, legs, and feet.
+### `ea59e70` — Add modular outfit dropdowns for head, body, legs, and feet.
 **Prompt:**
 > dame dropdowns para cambiarlo
+
+---
+
+### Outfit visibility fix
+**Prompt:**
+> Aparecen todas las opciones puestas en el personaje pero no se permiten quitar.
 
 ## Convención de commit
 

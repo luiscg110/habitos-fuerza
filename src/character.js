@@ -20,6 +20,12 @@ export function rankFor(ratio) {
 }
 
 export const OUTFITS = {
+  none: {
+    id: "none",
+    label: "Ninguno",
+    file: null,
+    prefix: null,
+  },
   adventurer: {
     id: "adventurer",
     label: "Aventurero",
@@ -157,7 +163,7 @@ export class Hero {
 
   async #load() {
     const loader = new GLTFLoader();
-    const entries = Object.values(OUTFITS);
+    const entries = Object.values(OUTFITS).filter((o) => o.file);
 
     const loaded = await Promise.all(
       entries.map(async (outfit) => ({
@@ -171,11 +177,18 @@ export class Hero {
       const partMap = {};
 
       model.traverse((obj) => {
-        if (obj.isMesh) {
-          if (/backpack/i.test(obj.name)) {
-            obj.visible = false;
-            return;
+        // Las piezas pueden ser Group (varias primitives) o Mesh
+        for (const [key, suffix] of Object.entries(PART_SUFFIX)) {
+          if (obj.name === `${outfit.prefix}_${suffix}`) {
+            partMap[key] = obj;
           }
+        }
+
+        if (/backpack/i.test(obj.name)) {
+          obj.visible = false;
+        }
+
+        if (obj.isMesh) {
           obj.castShadow = true;
           obj.receiveShadow = true;
           const mats = Array.isArray(obj.material)
@@ -187,12 +200,6 @@ export class Hero {
             mat.metalness = Math.min(mat.metalness ?? 0.05, 0.15);
             mat.envMapIntensity = 1.15;
           }
-
-          for (const [key, suffix] of Object.entries(PART_SUFFIX)) {
-            if (obj.name === `${outfit.prefix}_${suffix}`) {
-              partMap[key] = obj;
-            }
-          }
         }
         if (obj.isBone) {
           const conf = BULK_BONES.find((b) => b.name === obj.name);
@@ -200,7 +207,7 @@ export class Hero {
         }
       });
 
-      // Encajar cada modelo igual
+      // Medir con piezas visibles, luego ocultar
       const box = new THREE.Box3().setFromObject(model);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
@@ -213,6 +220,11 @@ export class Hero {
       );
       model.rotation.y = Math.PI * 0.18;
       this.baseScale = scale;
+
+      for (const key of PART_KEYS) {
+        const part = partMap[key];
+        if (part) this.#setTreeVisible(part, false);
+      }
 
       this.root.add(model);
       this.models.push(model);
@@ -251,23 +263,31 @@ export class Hero {
     if (loading) loading.hidden = true;
   }
 
+  #setTreeVisible(root, visible) {
+    root.visible = visible;
+    root.traverse((obj) => {
+      obj.visible = visible;
+    });
+  }
+
   applyOutfit(selection) {
     this.selection = { ...selection };
     saveOutfitSelection(this.selection);
 
-    // Oculta todas las piezas; muestra solo la combinación elegida
     for (const outfit of Object.values(OUTFITS)) {
+      if (!outfit.file) continue;
       const parts = this.partsByOutfit[outfit.id] || {};
       for (const key of PART_KEYS) {
-        const mesh = parts[key];
-        if (mesh) mesh.visible = false;
+        const part = parts[key];
+        if (part) this.#setTreeVisible(part, false);
       }
     }
 
     for (const key of PART_KEYS) {
       const outfitId = this.selection[key];
-      const mesh = this.partsByOutfit[outfitId]?.[key];
-      if (mesh) mesh.visible = true;
+      if (!outfitId || outfitId === "none") continue;
+      const part = this.partsByOutfit[outfitId]?.[key];
+      if (part) this.#setTreeVisible(part, true);
     }
   }
 
