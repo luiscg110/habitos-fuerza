@@ -1,6 +1,6 @@
 # Hábitos Fuerza
 
-App web con **Three.js** donde completar hábitos diarios hace más fuerte a un héroe 3D (Quaternius Adventurer, CC0).
+App web con **Three.js** y un cuerpo humanoide real (Mixamo Xbot): completar hábitos lo hace más fuerte.
 
 Rangos: Novato → En marcha → Firme → Guerrero → Imparable → Bestia.
 
