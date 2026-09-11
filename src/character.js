@@ -94,14 +94,14 @@ export function defaultOutfitSelection() {
   };
 }
 
-/** Cabeza según fuerza: bajo Hoodie → medio Traje → alto Aventurero */
+/** Head by strength: low Hoodie → mid Suit → high Adventurer */
 export function headForStrength(ratio) {
   if (ratio < 1 / 3) return "casual";
   if (ratio < 2 / 3) return "suit";
   return "adventurer";
 }
 
-/** Piernas según fuerza: Hoodie → Punk → Traje → Aventurero */
+/** Legs by strength: Hoodie → Punk → Suit → Adventurer */
 export function legsForStrength(ratio) {
   if (ratio < 0.25) return "casual";
   if (ratio < 0.5) return "punk";
@@ -109,20 +109,20 @@ export function legsForStrength(ratio) {
   return "adventurer";
 }
 
-/** Cuerpo según fuerza: Traje → Hoodie → Aventurero */
+/** Body by strength: Suit → Hoodie → Adventurer */
 export function bodyForStrength(ratio) {
   if (ratio < 1 / 3) return "suit";
   if (ratio < 2 / 3) return "casual";
   return "adventurer";
 }
 
-/** Pies según fuerza: Aventurero → Punk */
+/** Feet by strength: Adventurer → Punk */
 export function feetForStrength(ratio) {
   if (ratio < 0.5) return "adventurer";
   return "punk";
 }
 
-/** Vestimenta completa según % de fuerza */
+/** Full outfit by strength % */
 export function outfitForStrength(ratio) {
   return {
     head: headForStrength(ratio),
