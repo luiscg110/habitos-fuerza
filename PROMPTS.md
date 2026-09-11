@@ -38,7 +38,7 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 
 ---
 
-### Pendiente / siguiente — Adventurer con ropa
+### `1a0ca83` — Restore the clothed Adventurer hero model.
 **Prompt:**
 > ese ultimo tambien es una mierda, mejor vuelve al modelo con ropa
 
