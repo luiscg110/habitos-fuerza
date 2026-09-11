@@ -7,6 +7,7 @@ import {
   PART_LABELS,
   loadOutfitSelection,
   defaultOutfitSelection,
+  outfitForStrength,
 } from "./character.js";
 import {
   TASKS,
@@ -62,6 +63,15 @@ function showToast(message) {
   }, 1800);
 }
 
+function applyStrengthOutfit() {
+  if (!hero.ready) return;
+  const next = outfitForStrength(muscleRatio(state));
+  const cur = hero.selection || {};
+  const changed = PART_KEYS.some((part) => cur[part] !== next[part]);
+  if (changed) hero.applyOutfit(next);
+  syncOutfitSelects();
+}
+
 function syncUI() {
   const ratio = muscleRatio(state);
   const pct = Math.round(ratio * 100);
@@ -91,14 +101,14 @@ function syncUI() {
   }
 
   hero.setMuscle(ratio);
-  syncOutfitSelects();
+  applyStrengthOutfit();
 }
 
 function syncOutfitSelects() {
   const selection = hero.selection || loadOutfitSelection();
   for (const part of PART_KEYS) {
     const select = document.querySelector(`#outfit-${part}`);
-    if (select && selection[part] && select.value !== selection[part]) {
+    if (select && selection[part] != null && select.value !== selection[part]) {
       select.value = selection[part];
     }
   }
@@ -176,10 +186,17 @@ resetBtn.addEventListener("click", () => {
   state = resetDay(state);
   hero.setMuscle(0);
   lastRank = "";
-  const defaults = defaultOutfitSelection();
-  hero.applyOutfit(defaults);
+  if (hero.ready) {
+    hero.applyOutfit(outfitForStrength(0));
+  } else {
+    hero.applyOutfit(defaultOutfitSelection());
+  }
   syncOutfitSelects();
   showToast("Día reiniciado. A por todas.");
+  syncUI();
+});
+
+window.addEventListener("hero-ready", () => {
   syncUI();
 });
 

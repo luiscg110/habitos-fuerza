@@ -117,6 +117,22 @@ export function bodyForStrength(ratio) {
   return "adventurer";
 }
 
+/** Pies según fuerza: Aventurero → Punk */
+export function feetForStrength(ratio) {
+  if (ratio < 0.5) return "adventurer";
+  return "punk";
+}
+
+/** Vestimenta completa según % de fuerza */
+export function outfitForStrength(ratio) {
+  return {
+    head: headForStrength(ratio),
+    body: bodyForStrength(ratio),
+    legs: legsForStrength(ratio),
+    feet: feetForStrength(ratio),
+  };
+}
+
 export function loadOutfitSelection() {
   try {
     const raw = localStorage.getItem(OUTFIT_STORAGE);
@@ -278,11 +294,12 @@ export class Hero {
       }
     }
 
-    this.applyOutfit(this.selection);
+    this.applyOutfit(outfitForStrength(0));
     this.ready = true;
     this.setMuscle(this.targetMuscle, true);
     const loading = document.querySelector("#loading");
     if (loading) loading.hidden = true;
+    window.dispatchEvent(new CustomEvent("hero-ready"));
   }
 
   #setTreeVisible(root, visible) {

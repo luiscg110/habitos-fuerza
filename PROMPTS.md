@@ -102,6 +102,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > cuando pulse reiniciar dia la vestimenta se reinicia
 
+---
+
+### Reapply strength outfit rules
+**Prompt:**
+> pero no se estan aplicando las reglas de vestimentas de porcentjae que definimos
+
 ## Convención de commit
 
 ```
