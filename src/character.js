@@ -84,21 +84,22 @@ const BULK_BONES = [
   { name: "Neck", max: 1.08 },
 ];
 
-const OUTFIT_STORAGE = "habitos-fuerza-outfit-v2";
-
-const HEAD_POOL = ["casual", "suit", "adventurer"];
-
-function randomHead() {
-  return HEAD_POOL[Math.floor(Math.random() * HEAD_POOL.length)];
-}
+const OUTFIT_STORAGE = "habitos-fuerza-outfit-v3";
 
 export function defaultOutfitSelection() {
   return {
-    head: randomHead(),
+    head: "casual",
     body: "adventurer",
     legs: "adventurer",
     feet: "adventurer",
   };
+}
+
+/** Cabeza según fuerza: bajo Hoodie → medio Traje → alto Aventurero */
+export function headForStrength(ratio) {
+  if (ratio < 1 / 3) return "casual";
+  if (ratio < 2 / 3) return "suit";
+  return "adventurer";
 }
 
 export function loadOutfitSelection() {

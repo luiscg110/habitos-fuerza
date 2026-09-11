@@ -6,6 +6,7 @@ import {
   PART_KEYS,
   PART_LABELS,
   loadOutfitSelection,
+  headForStrength,
 } from "./character.js";
 import {
   TASKS,
@@ -82,6 +83,16 @@ function syncUI() {
   }
 
   hero.setMuscle(ratio);
+
+  // Cabeza progresa con la fuerza: Hoodie → Traje → Aventurero
+  const headId = headForStrength(ratio);
+  if (hero.selection?.head !== headId) {
+    hero.setPart("head", headId);
+  }
+  const headSelect = document.querySelector("#outfit-head");
+  if (headSelect && headSelect.value !== headId) {
+    headSelect.value = headId;
+  }
 }
 
 function renderTasks() {
@@ -124,13 +135,22 @@ function renderOutfitControls() {
 
     const label = document.createElement("label");
     label.htmlFor = `outfit-${part}`;
-    label.textContent = PART_LABELS[part];
+    label.textContent =
+      part === "head" ? `${PART_LABELS[part]} (por fuerza)` : PART_LABELS[part];
 
     const select = document.createElement("select");
     select.id = `outfit-${part}`;
     select.dataset.part = part;
+    if (part === "head") {
+      select.disabled = true;
+      select.title = "Cambia sola con tu nivel de fuerza";
+    }
 
     for (const outfit of Object.values(OUTFITS)) {
+      // Cabeza solo usa Hoodie / Traje / Aventurero
+      if (part === "head" && !["casual", "suit", "adventurer"].includes(outfit.id)) {
+        continue;
+      }
       const option = document.createElement("option");
       option.value = outfit.id;
       option.textContent = outfit.label;
@@ -138,11 +158,13 @@ function renderOutfitControls() {
       select.appendChild(option);
     }
 
-    select.addEventListener("change", () => {
-      hero.setPart(part, select.value);
-      const label = OUTFITS[select.value]?.label ?? select.value;
-      showToast(`${PART_LABELS[part]}: ${label}`);
-    });
+    if (part !== "head") {
+      select.addEventListener("change", () => {
+        hero.setPart(part, select.value);
+        const name = OUTFITS[select.value]?.label ?? select.value;
+        showToast(`${PART_LABELS[part]}: ${name}`);
+      });
+    }
 
     field.append(label, select);
     outfitControls.appendChild(field);
