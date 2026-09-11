@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hábitos Fuerza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene"></canvas>
+
+      <div class="atmosphere" aria-hidden="true"></div>
+
+      <header class="top">
+        <p class="brand">Hábitos Fuerza</p>
+        <div class="power">
+          <span class="power-label">Fuerza</span>
+          <div class="power-track" aria-hidden="true">
+            <div class="power-fill" id="power-fill"></div>
+          </div>
+          <span class="power-value" id="power-value">0%</span>
+        </div>
+      </header>
+
+      <aside class="panel">
+        <div class="panel-head">
+          <h1>Rutina de hoy</h1>
+          <p id="date-label"></p>
+        </div>
+
+        <ul class="tasks" id="task-list"></ul>
+
+        <footer class="panel-foot">
+          <p id="status-line">Completa hábitos y crece músculo.</p>
+          <button type="button" class="ghost" id="reset-day">Reiniciar día</button>
+        </footer>
+      </aside>
+
+      <div class="toast" id="toast" hidden></div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
