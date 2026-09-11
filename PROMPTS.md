@@ -156,6 +156,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > tambien cuando ya esta en niveles altos, antes habia como una luz amarilla que hacia que no se viera oscuro
 
+---
+
+### Yellow light from mid strength up
+**Prompt:**
+> aplicala de medio para arriba
+
 ## Convención de commit
 
 ```

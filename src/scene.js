@@ -201,13 +201,15 @@ async function loadHabitat(renderer, scene, lights) {
       lights.key.intensity = 1.2 + ease * 1.1;
       lights.key.color.setRGB(1, THREE.MathUtils.lerp(0.94, 0.9, ease), THREE.MathUtils.lerp(0.85, 0.72, ease));
       lights.fill.intensity = 0.4 + ease * 0.35;
-      // Rim + warm amarillos en alto: sacan al héroe de la oscuridad del lobby morado
-      lights.rim.intensity = 0.55 + ease * 1.5 + pulse * 1.1;
-      lights.rim.color.setRGB(1, THREE.MathUtils.lerp(0.72, 0.82, ease), THREE.MathUtils.lerp(0.4, 0.48, ease));
-      lights.warm.intensity = 0.15 + ease * 1.8 + pulse * 0.6;
-      lights.warm.color.setRGB(1, THREE.MathUtils.lerp(0.85, 0.78, ease), THREE.MathUtils.lerp(0.55, 0.42, ease));
 
-      renderer.toneMappingExposure = 0.85 + ease * 0.18;
+      // Luz amarilla solo de medio (50%) para arriba
+      const warmT = THREE.MathUtils.smoothstep(ease, 0.5, 1);
+      lights.rim.intensity = 0.45 + warmT * 1.6 + pulse * 1.1;
+      lights.rim.color.setRGB(1, THREE.MathUtils.lerp(0.72, 0.82, warmT), THREE.MathUtils.lerp(0.4, 0.48, warmT));
+      lights.warm.intensity = warmT * (1.95 + pulse * 0.6);
+      lights.warm.color.setRGB(1, THREE.MathUtils.lerp(0.85, 0.78, warmT), THREE.MathUtils.lerp(0.55, 0.42, warmT));
+
+      renderer.toneMappingExposure = 0.85 + warmT * 0.18;
       updateCss(ease);
     },
   };
