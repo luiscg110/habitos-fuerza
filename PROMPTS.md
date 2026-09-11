@@ -114,6 +114,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > que vetimenta el menu sea algo que se esconde y se abre
 
+---
+
+### Outfit color editing
+**Prompt:**
+> puedes editar el color de las vestimentas ?
+
 ## Convención de commit
 
 ```

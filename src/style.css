@@ -349,6 +349,13 @@ body {
   gap: 0.25rem;
 }
 
+.outfit-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+
 .outfit-field label {
   font-size: 0.72rem;
   font-weight: 700;
@@ -372,6 +379,43 @@ body {
   font-weight: 600;
   padding: 0.55rem 2rem 0.55rem 0.75rem;
   cursor: pointer;
+}
+
+.outfit-color {
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.outfit-color::-webkit-color-swatch-wrapper {
+  padding: 3px;
+}
+
+.outfit-color::-webkit-color-swatch {
+  border: none;
+  border-radius: 7px;
+}
+
+.color-clear {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.color-clear:hover {
+  color: var(--ink);
+  border-color: rgba(214, 255, 75, 0.4);
+  background: rgba(214, 255, 75, 0.08);
 }
 
 .outfit-field select:focus {

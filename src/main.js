@@ -8,6 +8,8 @@ import {
   loadOutfitSelection,
   defaultOutfitSelection,
   outfitForStrength,
+  loadPartColors,
+  defaultPartColors,
 } from "./character.js";
 import {
   TASKS,
@@ -155,6 +157,7 @@ function renderTasks() {
 
 function renderOutfitControls() {
   const selection = loadOutfitSelection();
+  const colors = loadPartColors();
   outfitControls.innerHTML = "";
 
   for (const part of PART_KEYS) {
@@ -164,6 +167,9 @@ function renderOutfitControls() {
     const label = document.createElement("label");
     label.htmlFor = `outfit-${part}`;
     label.textContent = PART_LABELS[part];
+
+    const row = document.createElement("div");
+    row.className = "outfit-row";
 
     const select = document.createElement("select");
     select.id = `outfit-${part}`;
@@ -186,7 +192,29 @@ function renderOutfitControls() {
       showToast(`${PART_LABELS[part]}: ${name}`);
     });
 
-    field.append(label, select);
+    const color = document.createElement("input");
+    color.type = "color";
+    color.className = "outfit-color";
+    color.id = `color-${part}`;
+    color.title = `Color de ${PART_LABELS[part]}`;
+    color.value = colors[part] || "#889988";
+    color.addEventListener("input", () => {
+      hero.setPartColor(part, color.value);
+    });
+
+    const clear = document.createElement("button");
+    clear.type = "button";
+    clear.className = "outfit-color-clear";
+    clear.title = "Color original";
+    clear.textContent = "↺";
+    clear.addEventListener("click", () => {
+      hero.setPartColor(part, "");
+      color.value = "#889988";
+      showToast(`${PART_LABELS[part]}: color original`);
+    });
+
+    row.append(select, color, clear);
+    field.append(label, row);
     outfitControls.appendChild(field);
   }
 }
@@ -197,8 +225,13 @@ resetBtn.addEventListener("click", () => {
   lastRank = "";
   if (hero.ready) {
     hero.applyOutfit(outfitForStrength(0));
+    hero.resetColors();
   } else {
     hero.applyOutfit(defaultOutfitSelection());
+  }
+  for (const part of PART_KEYS) {
+    const color = document.querySelector(`#color-${part}`);
+    if (color) color.value = "#6b8f71";
   }
   syncOutfitSelects();
   showToast("Día reiniciado. A por todas.");

@@ -152,6 +152,27 @@ export function saveOutfitSelection(selection) {
   localStorage.setItem(OUTFIT_STORAGE, JSON.stringify(selection));
 }
 
+const COLOR_STORAGE = "habitos-fuerza-colors-v1";
+const FACE_MAT = /skin|eye|hair|eyebrow|gold/i;
+
+export function defaultPartColors() {
+  return { head: "", body: "", legs: "", feet: "" };
+}
+
+export function loadPartColors() {
+  try {
+    const raw = localStorage.getItem(COLOR_STORAGE);
+    if (!raw) return defaultPartColors();
+    return { ...defaultPartColors(), ...JSON.parse(raw) };
+  } catch {
+    return defaultPartColors();
+  }
+}
+
+export function savePartColors(colors) {
+  localStorage.setItem(COLOR_STORAGE, JSON.stringify(colors));
+}
+
 export class Hero {
   constructor() {
     this.root = new THREE.Group();
@@ -169,6 +190,9 @@ export class Hero {
     /** @type {Record<string, Record<string, THREE.Object3D>>} */
     this.partsByOutfit = {};
     this.selection = loadOutfitSelection();
+    this.partColors = loadPartColors();
+    /** @type {Record<string, Record<string, { mat: THREE.Material, original: THREE.Color }[]>>} */
+    this.dyeables = {};
     this.aura = this.#makeAura();
     this.root.add(this.aura);
     this.#load().catch((err) => {
@@ -213,6 +237,7 @@ export class Hero {
     for (const { outfit, gltf } of loaded) {
       const model = gltf.scene;
       const partMap = {};
+      this.dyeables[outfit.id] = { head: [], body: [], legs: [], feet: [] };
 
       model.traverse((obj) => {
         // Las piezas pueden ser Group (varias primitives) o Mesh
@@ -245,6 +270,23 @@ export class Hero {
         }
       });
 
+      // Registrar materiales teñibles por pieza (ropa, no piel/ojos/pelo)
+      for (const key of PART_KEYS) {
+        const part = partMap[key];
+        if (!part) continue;
+        part.traverse((obj) => {
+          if (!obj.isMesh) return;
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          for (const mat of mats) {
+            if (!mat?.color) continue;
+            if (FACE_MAT.test(mat.name || "")) continue;
+            this.dyeables[outfit.id][key].push({
+              mat,
+              original: mat.color.clone(),
+            });
+          }
+        });
+      }
       // Medir con piezas visibles, luego ocultar
       const box = new THREE.Box3().setFromObject(model);
       const size = box.getSize(new THREE.Vector3());
@@ -295,6 +337,7 @@ export class Hero {
     }
 
     this.applyOutfit(outfitForStrength(0));
+    this.applyAllColors();
     this.ready = true;
     this.setMuscle(this.targetMuscle, true);
     const loading = document.querySelector("#loading");
@@ -333,6 +376,40 @@ export class Hero {
   setPart(partKey, outfitId) {
     if (!PART_KEYS.includes(partKey) || !OUTFITS[outfitId]) return;
     this.applyOutfit({ ...this.selection, [partKey]: outfitId });
+    this.applyPartColor(partKey, this.partColors[partKey] || "");
+  }
+
+  setPartColor(partKey, hex) {
+    if (!PART_KEYS.includes(partKey)) return;
+    this.partColors = { ...this.partColors, [partKey]: hex };
+    savePartColors(this.partColors);
+    this.applyPartColor(partKey, hex);
+  }
+
+  applyPartColor(partKey, hex) {
+    for (const outfit of Object.values(OUTFITS)) {
+      if (!outfit.file) continue;
+      const list = this.dyeables[outfit.id]?.[partKey] || [];
+      for (const entry of list) {
+        if (!hex) {
+          entry.mat.color.copy(entry.original);
+        } else {
+          entry.mat.color.set(hex);
+        }
+      }
+    }
+  }
+
+  applyAllColors() {
+    for (const key of PART_KEYS) {
+      this.applyPartColor(key, this.partColors[key] || "");
+    }
+  }
+
+  resetColors() {
+    this.partColors = defaultPartColors();
+    savePartColors(this.partColors);
+    this.applyAllColors();
   }
 
   setMuscle(value, instant = false) {
