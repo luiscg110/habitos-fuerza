@@ -9,7 +9,6 @@ import {
   defaultOutfitSelection,
   outfitForStrength,
   loadPartColors,
-  defaultPartColors,
 } from "./character.js";
 import {
   TASKS,
@@ -231,7 +230,7 @@ resetBtn.addEventListener("click", () => {
   }
   for (const part of PART_KEYS) {
     const color = document.querySelector(`#color-${part}`);
-    if (color) color.value = "#6b8f71";
+    if (color) color.value = "#889988";
   }
   syncOutfitSelects();
   showToast("Día reiniciado. A por todas.");

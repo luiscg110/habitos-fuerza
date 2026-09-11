@@ -400,7 +400,7 @@ body {
   border-radius: 7px;
 }
 
-.color-clear {
+.outfit-color-clear {
   width: 2.2rem;
   height: 2.2rem;
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -412,7 +412,7 @@ body {
   cursor: pointer;
 }
 
-.color-clear:hover {
+.outfit-color-clear:hover {
   color: var(--ink);
   border-color: rgba(214, 255, 75, 0.4);
   background: rgba(214, 255, 75, 0.08);
