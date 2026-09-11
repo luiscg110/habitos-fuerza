@@ -39,7 +39,7 @@ const PART_OPTIONS = {
   head: ["none", "casual", "suit", "adventurer"],
   body: ["none", "suit", "casual", "adventurer"],
   legs: ["none", "casual", "punk", "suit", "adventurer"],
-  feet: ["none", "casual", "punk", "suit", "adventurer"],
+  feet: ["none", "adventurer", "punk"],
 };
 
 const checkSvg = `

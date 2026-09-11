@@ -90,6 +90,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > pero los dropdowns son seleccionable
 
+---
+
+### Feet outfit options
+**Prompt:**
+> para pies es aventurero, punk
+
 ## Convención de commit
 
 ```
