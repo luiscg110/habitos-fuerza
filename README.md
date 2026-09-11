@@ -4,6 +4,8 @@ App web con **Three.js** y un cuerpo humanoide real (Mixamo Xbot): completar há
 
 Rangos: Novato → En marcha → Firme → Guerrero → Imparable → Bestia.
 
+Los prompts de cada cambio están en [`PROMPTS.md`](./PROMPTS.md).
+
 ## Cómo correr
 
 ```bash

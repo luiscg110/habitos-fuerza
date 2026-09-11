@@ -1,0 +1,47 @@
+# Prompts ↔ commits
+
+Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt del usuario** que lo provocó.
+
+## Historial
+
+### `18e388b` — Add Hábitos Fuerza daily habit app with Three.js hero.
+**Prompt:**
+> crea un app para que use 3js que cuando se cumple una tarea diaria hace mas fuerte a un personaje, le sale mas musculo, varias cosas como banarse los dientes, arreglar el cuarto , cosas de cada dia
+
+**También:** `subelo a github luiscg110`
+
+---
+
+### `805bb69` — Show a shirtless hero with visible muscles and power ranks.
+**Prompts (acumulados hasta ese push):**
+> se ve muy raro el personaje, algo que se vea mas real si quieres investiga, si algo puede ser algo mejor que 3js
+
+> pero ya parece un cuerpo de biologia, no algo que motive
+
+> Cargando héroe… y no aparece
+
+> pero que se le vea el cuerpo
+
+> cada cambio es un commit y push
+
+---
+
+### `c26c793` — Use a real humanoid mesh instead of box primitives.
+**Prompt:**
+> estas como retrasado mental porque vuelves a un estado peor yo te habia dicho que este modelo era puros cajas y esferas
+
+---
+
+### Siguiente — este archivo
+**Prompt:**
+> guarda los propmts con los commits
+
+## Convención de commit
+
+```
+Asunto corto (qué cambió).
+
+Por qué / efecto.
+
+Prompt: <texto exacto del usuario>
+```
