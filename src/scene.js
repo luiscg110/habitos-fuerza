@@ -5,12 +5,48 @@ import { Hero } from "./character.js";
 /**
  * Ambientes reales (Poly Haven, CC0):
  * - pobre: abandoned_workshop
- * - rico: hotel_room
+ * - rico: newman_lobby (morado)
  *
- * Patrón habitual en Three.js / demos:
- * HDRI → scene.background + PMREM → scene.environment (IBL).
- * La fuerza cruza de un HDRI a otro.
+ * HDRI en skybox shader (nítido, sin blur) + PMREM para IBL.
+ * Cruce suave por mixFactor; brillo contenido.
  */
+const skyVert = /* glsl */ `
+  varying vec3 vWorldDirection;
+  void main() {
+    vec4 worldPos = modelMatrix * vec4(position, 1.0);
+    vWorldDirection = worldPos.xyz - cameraPosition;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    gl_Position.z = gl_Position.w;
+  }
+`;
+
+const skyFrag = /* glsl */ `
+  precision highp float;
+  precision highp sampler2D;
+  uniform sampler2D tPoor;
+  uniform sampler2D tRich;
+  uniform float mixFactor;
+  uniform float bgGain;
+  varying vec3 vWorldDirection;
+
+  vec2 equirectUv(vec3 dir) {
+    vec3 d = normalize(dir);
+    float u = atan(d.z, d.x) * 0.15915494309 + 0.5;
+    float v = asin(clamp(d.y, -1.0, 1.0)) * 0.31830988618 + 0.5;
+    return vec2(u, v);
+  }
+
+  void main() {
+    vec2 uv = equirectUv(vWorldDirection);
+    vec3 poor = texture2D(tPoor, uv).rgb;
+    vec3 rich = texture2D(tRich, uv).rgb;
+    vec3 color = mix(poor, rich, mixFactor) * bgGain;
+    gl_FragColor = vec4(color, 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
 async function loadHabitat(renderer, scene, lights) {
   const loader = new HDRLoader();
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -31,12 +67,29 @@ async function loadHabitat(renderer, scene, lights) {
   const richEnv = pmrem.fromEquirectangular(richMap).texture;
   pmrem.dispose();
 
-  scene.background = poorMap;
-  scene.environment = poorEnv;
-  scene.environmentIntensity = 1;
-  scene.backgroundBlurriness = 0.12;
-  scene.backgroundIntensity = 1;
+  const skyMat = new THREE.ShaderMaterial({
+    uniforms: {
+      tPoor: { value: poorMap },
+      tRich: { value: richMap },
+      mixFactor: { value: 0 },
+      bgGain: { value: 0.55 },
+    },
+    vertexShader: skyVert,
+    fragmentShader: skyFrag,
+    side: THREE.BackSide,
+    depthWrite: false,
+    depthTest: false,
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(50, 64, 32), skyMat);
+  sky.frustumCulled = false;
+  sky.renderOrder = -100;
+  scene.add(sky);
+
+  scene.background = null;
   scene.fog = null;
+  scene.backgroundBlurriness = 0;
+  scene.environment = poorEnv;
+  scene.environmentIntensity = 0.65;
 
   const ground = new THREE.Mesh(
     new THREE.CircleGeometry(2.8, 64),
@@ -45,7 +98,7 @@ async function loadHabitat(renderer, scene, lights) {
       roughness: 0.9,
       metalness: 0.08,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.45,
     }),
   );
   ground.rotation.x = -Math.PI / 2;
@@ -58,10 +111,10 @@ async function loadHabitat(renderer, scene, lights) {
     new THREE.MeshStandardMaterial({
       color: 0x8a7a50,
       emissive: 0x3a3010,
-      emissiveIntensity: 0.3,
+      emissiveIntensity: 0.25,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.55,
       roughness: 0.4,
       metalness: 0.45,
     }),
@@ -77,9 +130,9 @@ async function loadHabitat(renderer, scene, lights) {
       new THREE.MeshStandardMaterial({
         color: i % 2 === 0 ? 0xd6ff4b : 0xff7a45,
         emissive: i % 2 === 0 ? 0x88aa22 : 0xaa4422,
-        emissiveIntensity: 0.7,
+        emissiveIntensity: 0.55,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.22,
       }),
     );
     orb.userData = {
@@ -93,21 +146,20 @@ async function loadHabitat(renderer, scene, lights) {
   }
 
   let display = 0;
-  let usingRich = false;
   const poorRing = new THREE.Color(0x6a5a40);
-  const richRing = new THREE.Color(0xd4af37);
+  const richRing = new THREE.Color(0xb89a4a);
   const poorEmi = new THREE.Color(0x2a2210);
-  const richEmi = new THREE.Color(0x8a6a18);
+  const richEmi = new THREE.Color(0x5a4080);
   const tmp = new THREE.Color();
 
   function updateCss(t) {
     const atm = document.querySelector(".atmosphere");
     if (!atm) return;
-    const veil = 0.08 - t * 0.04;
-    const gold = 0.015 + t * 0.07;
+    const veil = 0.18 - t * 0.06;
+    const purple = 0.04 + t * 0.1;
     atm.style.background = `
-      radial-gradient(ellipse 65% 50% at 60% 40%, rgba(212, 175, 55, ${gold}), transparent 62%),
-      linear-gradient(180deg, rgba(0,0,0,${veil * 0.2}), rgba(0,0,0,${veil}) 100%)
+      radial-gradient(ellipse 65% 50% at 62% 40%, rgba(120, 80, 180, ${purple}), transparent 62%),
+      linear-gradient(180deg, rgba(0,0,0,${veil * 0.35}), rgba(0,0,0,${veil}) 100%)
     `;
   }
 
@@ -119,41 +171,39 @@ async function loadHabitat(renderer, scene, lights) {
       const t = THREE.MathUtils.clamp(display, 0, 1);
       const ease = t * t * (3 - 2 * t);
 
-      // Cruce: en el medio borra más; al cruzar 50% cambia el HDRI
-      const edge = Math.abs(ease * 2 - 1);
-      scene.backgroundBlurriness = THREE.MathUtils.lerp(0.45, 0.08, edge);
-      scene.backgroundIntensity = THREE.MathUtils.lerp(0.55, 1.05, edge);
+      skyMat.uniforms.mixFactor.value = ease;
+      skyMat.uniforms.bgGain.value = THREE.MathUtils.lerp(0.5, 0.62, ease);
 
-      const wantRich = ease >= 0.5;
-      if (wantRich !== usingRich) {
-        usingRich = wantRich;
-        scene.background = usingRich ? richMap : poorMap;
-        scene.environment = usingRich ? richEnv : poorEnv;
+      if (ease < 0.5) {
+        scene.environment = poorEnv;
+        scene.environmentIntensity = THREE.MathUtils.lerp(0.55, 0.7, ease * 2);
+      } else {
+        scene.environment = richEnv;
+        scene.environmentIntensity = THREE.MathUtils.lerp(0.7, 0.85, (ease - 0.5) * 2);
       }
-      scene.environmentIntensity = THREE.MathUtils.lerp(0.95, 1.4, ease);
 
-      ground.material.roughness = THREE.MathUtils.lerp(0.92, 0.32, ease);
-      ground.material.metalness = THREE.MathUtils.lerp(0.06, 0.4, ease);
-      ground.material.opacity = THREE.MathUtils.lerp(0.45, 0.28, ease);
+      ground.material.roughness = THREE.MathUtils.lerp(0.92, 0.4, ease);
+      ground.material.metalness = THREE.MathUtils.lerp(0.06, 0.28, ease);
+      ground.material.opacity = THREE.MathUtils.lerp(0.5, 0.32, ease);
 
       tmp.copy(poorRing).lerp(richRing, ease);
       ring.material.color.copy(tmp);
       tmp.copy(poorEmi).lerp(richEmi, ease);
       ring.material.emissive.copy(tmp);
-      ring.material.emissiveIntensity = 0.25 + ease * 0.5 + pulse * 0.25;
-      ring.material.opacity = 0.5 + ease * 0.25;
+      ring.material.emissiveIntensity = 0.2 + ease * 0.35 + pulse * 0.2;
+      ring.material.opacity = 0.45 + ease * 0.2;
 
-      lights.hemi.intensity = 0.45 + ease * 0.25;
-      lights.key.intensity = 1.6 + ease * 0.8;
-      lights.fill.intensity = 0.55 + ease * 0.3;
-      lights.rim.intensity = 0.7 + ease * 1.0 + pulse * 1.2;
+      lights.hemi.intensity = 0.35 + ease * 0.15;
+      lights.key.intensity = 1.1 + ease * 0.35;
+      lights.fill.intensity = 0.4 + ease * 0.15;
+      lights.rim.intensity = 0.45 + ease * 0.55 + pulse * 0.8;
       lights.rim.color.setRGB(
-        THREE.MathUtils.lerp(1, 0.92, ease),
-        THREE.MathUtils.lerp(0.7, 0.95, ease),
-        THREE.MathUtils.lerp(0.4, 0.55, ease),
+        THREE.MathUtils.lerp(1, 0.75, ease),
+        THREE.MathUtils.lerp(0.7, 0.55, ease),
+        THREE.MathUtils.lerp(0.4, 0.95, ease),
       );
 
-      renderer.toneMappingExposure = 1.05 + ease * 0.15;
+      renderer.toneMappingExposure = 0.82 + ease * 0.08;
       updateCss(ease);
     },
   };
@@ -171,10 +221,10 @@ export function createScene(canvas) {
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 0.85;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x1a1410);
+  scene.background = new THREE.Color(0x140f18);
 
   const camera = new THREE.PerspectiveCamera(
     38,
@@ -185,9 +235,9 @@ export function createScene(canvas) {
   camera.position.set(2.3, 1.5, 3.9);
   camera.lookAt(0.15, 1.0, 0);
 
-  const hemi = new THREE.HemisphereLight(0xffe8c8, 0x2a2018, 0.55);
+  const hemi = new THREE.HemisphereLight(0xe8d8c8, 0x2a2018, 0.4);
   scene.add(hemi);
-  const key = new THREE.DirectionalLight(0xfff0d8, 1.8);
+  const key = new THREE.DirectionalLight(0xfff0d8, 1.2);
   key.position.set(3.2, 5.8, 3);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
@@ -199,10 +249,10 @@ export function createScene(canvas) {
   key.shadow.camera.bottom = -4;
   key.shadow.bias = -0.0002;
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0x9ab0c8, 0.6);
+  const fill = new THREE.DirectionalLight(0x9ab0c8, 0.4);
   fill.position.set(-3.4, 2.2, 0.8);
   scene.add(fill);
-  const rim = new THREE.PointLight(0xffaa55, 0.8, 10);
+  const rim = new THREE.PointLight(0xffaa55, 0.55, 10);
   rim.position.set(-1.4, 2.3, 2.3);
   scene.add(rim);
   const lights = { hemi, key, fill, rim };
@@ -260,7 +310,7 @@ export function createScene(canvas) {
           u.height + Math.sin(now * 0.001 + u.angle) * 0.1,
           Math.sin(u.angle) * u.radius * 0.65,
         );
-        orb.material.opacity = 0.15 + hero.muscle * 0.45;
+        orb.material.opacity = 0.12 + hero.muscle * 0.35;
       }
     }
 

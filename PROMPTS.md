@@ -138,6 +138,12 @@ Cada cambio se sube con commit + push. El cuerpo del commit incluye el **prompt 
 **Prompt:**
 > es una mierda, si quieres busca ambientes ya hechos o como los hacen
 
+---
+
+### Tone down HDRI brightness and blur
+**Prompt:**
+> se ve muy brillante, y como estaba antes rea mejor, que era coo un fondo morado el rico y antes no se veia tan borroso el fondo y en los niveles intermidos aun mas
+
 ## Convención de commit
 
 ```
